@@ -1,0 +1,33 @@
+{
+  "name": "wikidata-maps-webserver",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "prebuild": "npm run clean",
+    "prewatch": "npm run clean",
+    "clean": "rm -rf ./dist/*",
+    "build": "tsc --build",
+    "watch": "tsc --build --watch",
+    "dev": "export $(grep -v '^#' ../.local-raw.env | xargs) && nodemon --ext js,html --watch ./dist --watch ./views ./dist/entry.js",
+    "local-attached-container": "docker compose --env-file ../.local-container.env -f ../run.yaml -f ../build.yaml up --build webserver",
+    "local-container": "docker compose --env-file ../.local-container.env -f ../run.yaml -f ../build.yaml up -d --build webserver",
+    "remote-attached-container": "docker --context favus compose --env-file ../.prod.env -f ../run.yaml -f ../build.yaml up --build webserver",
+    "remote-container": "docker --context favus compose --env-file ../.prod.env -f ../run.yaml -f ../build.yaml up -d --build webserver",
+    "build-container": "docker compose -f ../build.yaml build webserver",
+    "push-container": "docker compose -f ../build.yaml push webserver",
+    "prod-remote-container": "docker --context favus compose --env-file ../.prod.env -f ../run.yaml -f ../deploy.yaml up -d webserver"
+  },
+  "type": "module",
+  "exports": "./dist/entry.js",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "express": "^4"
+  },
+  "devDependencies": {
+    "@types/express": "^4",
+    "nodemon": "^3",
+    "typescript": "^5"
+  }
+}

@@ -1,0 +1,18 @@
+{
+    "display": "ES2022 - nodenext",
+
+    "include": [ "./src/**/*" ],
+
+    "compilerOptions": {
+        "composite": true, // https://wallis.dev/blog/typescript-project-references
+        "rootDir": "./src", // with composite set, the default changes to tsconfig dir
+        "outDir": "./dist",
+        "strict": true,
+        "lib": [ "ES2022" ],
+        "target": "ES2022",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "declaration": true,
+        "declarationMap": true // recommended for composite/reference builds
+    }
+}

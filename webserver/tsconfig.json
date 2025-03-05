@@ -1,0 +1,18 @@
+{
+    "include": [ "src/**/*" ],
+
+    "references": [
+        { "path": "../shared" }
+    ],
+
+    "compilerOptions": {
+        "outDir": "./dist",
+        "strict": true,
+        "noFallthroughCasesInSwitch": true,
+        "lib": [ "ES2022" ],
+        "target": "ES2022",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "declaration": false
+    }
+}

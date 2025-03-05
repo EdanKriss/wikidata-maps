@@ -1,0 +1,11 @@
+# build
+**/node_modules
+**/dist
+tsconfig.tsbuildinfo
+
+# private
+*.env
+!.example.env
+
+# misc
+.DS_Store
