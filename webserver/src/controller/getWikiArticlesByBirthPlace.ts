@@ -1,5 +1,6 @@
 import { SparqlResults } from "./wikidata.js";
 
+// a person who is the subject of a dedicated wikipedia article
 type WikiPerson = {
     article: string; // ?article
     name: string; // ?personLabel
@@ -22,37 +23,45 @@ export async function getAllPeopleByBirthplace(birthplaceCountryCode: string): P
     let hasMore = true;
 
     while (hasMore) {
-        const sparqlQuery = `
-            SELECT ?article ?personLabel ?description ?birthPlace WHERE {
-                ?person wdt:P31 wd:Q5;
-                        wdt:P19/wdt:P17 wd:${birthplaceCountryCode};
-                        wikibase:sitelinks ?sitelinks.
-                SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
-            }
-            LIMIT ${limit}
-            OFFSET ${offset}
-        `;
+        const sparqlQuery =
+            'SELECT ?article ?personLabel ?description ?birthPlace WHERE { ' +
+                // is an instance of a human (Q5)
+                '?person wdt:P31 wd:Q5 . ' +
+                // has a place of birth within the specified country
+                '?person wdt:P19 ?birthPlace . ' +
+                `?birthPlace wdt:P17 wd:${birthplaceCountryCode} . ` +
+                // has a Wikipedia page about the ?person
+                '?article schema:about ?person ; ' +
+                    'schema:inLanguage "en" ; ' +
+                    'schema:isPartOf <https://en.wikipedia.org/> . ' +
+                // Retrieve labels and descriptions in English
+                'SERVICE wikibase:label { ' +
+                    'bd:serviceParam wikibase:language "en" . ' +
+                '} ' +
+            '} ' +
+            `LIMIT ${limit} ` +
+            `OFFSET ${offset}`;
 
-        const encodedQuery = encodeURIComponent(sparqlQuery);
-        const url = `https://query.wikidata.org/sparql?format=json&query=${encodedQuery}`;
+        const url = `https://query.wikidata.org/sparql?format=json&query=${encodeURIComponent(sparqlQuery)}`;
 
         try {
             const response = await fetch(url, {
                 headers: {
                     'Accept': 'application/sparql-results+json',
-                    'User-Agent': 'YourAppName/1.0 (your.email@example.com)',
+                    'User-Agent': 'WikidataMaps/1.0 (edan@ivytower.app)',
                 },
             });
 
             if (!response.ok) {
-                throw new Error(`HTTP error at offset ${offset}! status: ${response.status}`);
+                console.error(`response:`, response);
+                throw new Error(`HTTP error: ${response.status} ${response.statusText}`);
             }
 
             const data = await response.json() as SparqlResults;
             const results: WikiPerson[] = data.results.bindings.map(item => ({
                 article: item.article.value,
                 name: item.personLabel.value,
-                description: item.description.value,
+                description: item.description?.value,
                 birthPlace: item.birthPlace.value,
             }));
 
@@ -68,7 +77,6 @@ export async function getAllPeopleByBirthplace(birthplaceCountryCode: string): P
             // }
 
         } catch (error) {
-            console.error(`Error at offset ${offset}:`, error);
             throw error;
         }
     }

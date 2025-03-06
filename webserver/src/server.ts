@@ -90,12 +90,11 @@ export class WebServer {
         res: express.Response, 
         next: express.NextFunction,
     ) => {
-        // const error = new UnifiedError(err);
         res.status(error.status || 500);
         res.send({
             success: false, 
             data: null, 
-            error,
+            error: error.message,
         } satisfies ResponseBody);
     }
     
@@ -121,7 +120,6 @@ export class WebServer {
     }
 
     async #updateCountryCodes(): Promise<void | never> {
-        // pools dont require initial connect, but we want to test the connection
         try {
             this.#countryMap = await fetchAllCountryCodes();
             console.info('Connected to wikidata successfully.');
