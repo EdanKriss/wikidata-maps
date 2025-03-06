@@ -4,7 +4,7 @@ import { SparqlResults } from "./wikidata.js";
 type WikiPerson = {
     article: string; // ?article
     name: string; // ?personLabel
-    description: string; // ?description
+    description: string; // ?personDescription
     birthPlace: string; // ?birthPlace
 };
 
@@ -24,8 +24,8 @@ export async function getAllPeopleByBirthplace(birthplaceCountryCode: string): P
 
     while (hasMore) {
         const sparqlQuery =
-            'SELECT ?article ?personLabel ?description ?birthPlace WHERE { ' +
-                // is an instance of a human (Q5)
+            'SELECT ?article ?personLabel ?personDescription ?birthPlace WHERE { ' +
+                // is a human (Q5)
                 '?person wdt:P31 wd:Q5 . ' +
                 // has a place of birth within the specified country
                 '?person wdt:P19 ?birthPlace . ' +
@@ -34,7 +34,7 @@ export async function getAllPeopleByBirthplace(birthplaceCountryCode: string): P
                 '?article schema:about ?person ; ' +
                     'schema:inLanguage "en" ; ' +
                     'schema:isPartOf <https://en.wikipedia.org/> . ' +
-                // Retrieve labels and descriptions in English
+                // retrieve labels and descriptions in English
                 'SERVICE wikibase:label { ' +
                     'bd:serviceParam wikibase:language "en" . ' +
                 '} ' +
@@ -61,7 +61,7 @@ export async function getAllPeopleByBirthplace(birthplaceCountryCode: string): P
             const results: WikiPerson[] = data.results.bindings.map(item => ({
                 article: item.article.value,
                 name: item.personLabel.value,
-                description: item.description?.value,
+                description: item.personDescription?.value || '',
                 birthPlace: item.birthPlace.value,
             }));
 
