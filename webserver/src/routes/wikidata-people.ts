@@ -12,9 +12,13 @@ export function createWikidataPeopleRouter(): Router {
     const router = Router();
 
     router.get(
-        '/:countryCode',
-        async (req: Request<{ countryCode: string }>, res, next) => {
-            const countryCode = req.params.countryCode;
+        '/people/:countryCode',
+        async function (
+            req: Request<{ countryCode: string }>,
+            res: Response<ResponseBodies.GET_wikidata_people>,
+            next: NextFunction
+        ) {
+            const { countryCode } = req.params;
             try {
                 const result = await getAllPeopleByBirthplace(countryCode);
                 res.status(200);

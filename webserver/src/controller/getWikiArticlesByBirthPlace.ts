@@ -1,22 +1,8 @@
+import { type WikiPerson } from "../../../shared/dist/model/wikidata-person.js";
+
 import { SparqlResults } from "./wikidata.js";
 
-// a person who is the subject of a dedicated wikipedia article
-type WikiPerson = {
-    article: string; // ?article
-    name: string; // ?personLabel
-    description: string; // ?personDescription
-    birthPlace: string; // ?birthPlace
-};
-
 export async function getAllPeopleByBirthplace(birthplaceCountryCode: string): Promise<WikiPerson[]> {
-    // const countryMap = {
-    //     'ireland': 'Q27',
-    //     'united states': 'Q30',
-    //     'united kingdom': 'Q145',
-    //     'france': 'Q142',
-    //     'germany': 'Q183',
-    // };
-
     const limit = 5000;
     let offset = 0;
     let allResults: WikiPerson[] = [];

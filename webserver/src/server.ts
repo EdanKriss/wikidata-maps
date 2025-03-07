@@ -30,7 +30,7 @@ export class WebServer {
         this.#app.use(express.json());
         this.#app.use(this.#logRequest);
         this.#app.use(
-            path.join(process.env.WEBSERVER_BASE_PATH, '/wikidata-people'),
+            path.join(process.env.WEBSERVER_BASE_PATH, '/wikidata'),
             createWikidataPeopleRouter(),
         );
         this.#app.use(this.#handle404);

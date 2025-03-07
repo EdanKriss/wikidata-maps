@@ -4,6 +4,14 @@ import { type SparqlResults } from "./wikidata.js";
 //     [name: string]: string; // { "Ireland": "Q27" }
 // }
 
+// const countryMap = {
+//     'ireland': 'Q27',
+//     'united states': 'Q30',
+//     'united kingdom': 'Q145',
+//     'france': 'Q142',
+//     'germany': 'Q183',
+// };
+
 export type CountryMap = Map<string, string | undefined>;
 
 export async function fetchAllCountryCodes(): Promise<CountryMap> {

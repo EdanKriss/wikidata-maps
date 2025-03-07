@@ -1,0 +1,39 @@
+{
+  "name": "wikidata-maps-frontend",
+  "private": true,
+  "author": "Edan Kriss",
+  "type": "module",
+  "scripts": {
+    "dev": "export $(grep -v '^#' ../.local-raw.env | xargs) && webpack serve --mode development",
+    "build-dev": "export $(grep -v '^#' ../.local-raw.env | xargs) && webpack --mode development ",
+    "watch-dev": "export $(grep -v '^#' ../.local-raw.env | xargs) && webpack --mode development --watch",
+    "analyze-size": "export $(grep -v '^#' ../.local-raw.env | xargs) && webpack --mode production --env ANALYZE_BUNDLE=true",
+    "build": "webpack --mode production"
+  },
+  "dependencies": {
+    "@emotion/react": "^11",
+    "@emotion/styled": "^11",
+    "@fontsource/roboto": "^5",
+    "@mui/icons-material": "^6",
+    "@mui/material": "^6",
+    "notistack": "^3",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-helmet": "^6",
+    "react-router": "^7"
+  },
+  "devDependencies": {
+    "@types/react-dom": "^18",
+    "@types/react-helmet": "^6",
+    "css-loader": "^7",
+    "html-webpack-plugin": "^5",
+    "mini-css-extract-plugin": "^2",
+    "style-loader": "^3",
+    "ts-loader": "^9",
+    "typescript": "^5",
+    "webpack": "^5",
+    "webpack-bundle-analyzer": "^4",
+    "webpack-cli": "^5",
+    "webpack-dev-server": "^5"
+  }
+}
