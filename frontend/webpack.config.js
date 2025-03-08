@@ -89,6 +89,10 @@ export default function (env, argv) {
                     test: /\.(gif|png|jpe?g|svg|webp)$/,
                     type: 'asset',
                     include: resolve('public/images'),
+                },{
+                    test: /\.json$/,
+                    type: 'asset',
+                    include: resolve('public'),
                 },
                 // {
                 //     test: /\.pdf$/,

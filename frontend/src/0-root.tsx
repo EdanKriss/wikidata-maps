@@ -15,5 +15,7 @@ declare global {
 const rootElement: HTMLDivElement = document.createElement('div');
 const reactRoot: Root = createRoot(rootElement);
 
+rootElement.style.height = '100svh';
+rootElement.style.width = '100svw';
 document.body.prepend(rootElement);
 reactRoot.render(<Shell />);

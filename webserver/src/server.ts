@@ -6,7 +6,8 @@ import express from 'express';
 
 import { UI_SPA_ROUTES } from '../../shared/dist/request/ui-routes.js';
 import { type ResponseBody } from '../../shared/dist/response/index.js';
-import { fetchAllCountryCodes, type CountryMap } from './controller/countryCodes.js';
+import { type CountryCodeMap } from "../../shared/dist/model/country.js";
+import { fetchAllCountryCodes } from './controller/countryCodes.js';
 
 import { createWikidataPeopleRouter } from './routes/wikidata-people.js';
 
@@ -16,7 +17,7 @@ export class WebServer {
     #port: number = process.env.WEBSERVER_PORT ? Number(process.env.WEBSERVER_PORT) : 3000;
     #viewsDir: string = fileURLToPath(import.meta.resolve('../views'));
     #html404: string = readFileSync(path.join(this.#viewsDir, '404.html')).toString();
-    #countryMap: CountryMap = new Map();
+    countryCodeMap: CountryCodeMap = {};
 
     constructor() {
         this.#app = express();
@@ -31,7 +32,7 @@ export class WebServer {
         this.#app.use(this.#logRequest);
         this.#app.use(
             path.join(process.env.WEBSERVER_BASE_PATH, '/wikidata'),
-            createWikidataPeopleRouter(),
+            createWikidataPeopleRouter(this),
         );
         this.#app.use(this.#handle404);
         this.#app.use(this.#handleError);
@@ -121,7 +122,7 @@ export class WebServer {
 
     async #updateCountryCodes(): Promise<void | never> {
         try {
-            this.#countryMap = await fetchAllCountryCodes();
+            this.countryCodeMap = await fetchAllCountryCodes();
             console.info('Connected to wikidata successfully.');
         } catch (error) {
             console.error(error);

@@ -1,20 +1,8 @@
+import { type CountryCodeMap } from "../../../shared/dist/model/country.js";
+
 import { type SparqlResults } from "./wikidata.js";
 
-// export interface CountryMap {
-//     [name: string]: string; // { "Ireland": "Q27" }
-// }
-
-// const countryMap = {
-//     'ireland': 'Q27',
-//     'united states': 'Q30',
-//     'united kingdom': 'Q145',
-//     'france': 'Q142',
-//     'germany': 'Q183',
-// };
-
-export type CountryMap = Map<string, string | undefined>;
-
-export async function fetchAllCountryCodes(): Promise<CountryMap> {
+export async function fetchAllCountryCodes(): Promise<CountryCodeMap> {
     const sparqlQuery = `
         SELECT ?country ?countryLabel WHERE {
             ?country wdt:P31 wd:Q6256. # Instance of: sovereign country
@@ -38,16 +26,16 @@ export async function fetchAllCountryCodes(): Promise<CountryMap> {
         const data = await response.json() as SparqlResults;
         // console.log('fetchAllCountryCodes() raw result', JSON.stringify(data.results));
 
-        const countryMap: CountryMap = new Map();
+        const countryCodeMap: CountryCodeMap = {};
 
         data.results.bindings.forEach(binding => {
             const name = binding.countryLabel.value;
             const qCode = binding.country.value.split('/entity/')[1];
-            countryMap.set(name, qCode);
+            countryCodeMap[name] = qCode;
         });
 
-        console.log('fetchAllCountryCodes() parsed results', countryMap.entries());
-        return countryMap;
+        console.log('fetchAllCountryCodes() parsed results', countryCodeMap);
+        return countryCodeMap;
     } catch (error) {
         console.error('ERROR fetchAllCountryCodes():', error);
         throw error;
